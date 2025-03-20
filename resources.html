@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Calculator & Results</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>BMI Calculator & Results</h1>
+        <p>Enter your weight and height using standard or metric measures.</p>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home Page</a></li>
+                <li><a href="course-details.html">BMI Calculator</a></li>
+                <li><a href="resources.html">Results & Recommendations</a></li>
+                <li><a href="blog.html">BMI Information</a></li>
+                <li><a href="health-tips.html">Health & Fitness Tips</a></li>
+                <li><a href="contact.html">Contact or About</a></li>
+                <li><a href="appdownlaod.html">Downlaod Bmi App</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="section-content">
+            <h2>Calculate Your BMI</h2>
+            <p>Enter your weight and height to determine your Body Mass Index (BMI).</p>
+
+            <label for="unit">Select Unit:</label>
+            <select id="unit" onchange="toggleUnits()">
+                <option value="metric">Metric (kg, cm)</option>
+                <option value="imperial">Imperial (lbs, ft)</option>
+            </select>
+
+            <!-- Metric Input -->
+            <div id="metric-inputs">
+                <label for="weight-metric">Weight (kg):</label>
+                <input type="number" id="weight-metric" placeholder="Enter your weight">
+                
+                <label for="height-metric">Height (cm):</label>
+                <input type="number" id="height-metric" placeholder="Enter your height">
+            </div>
+
+            <!-- Imperial Input (Removed Inches) -->
+            <div id="imperial-inputs" style="display: none;">
+                <label for="weight-imperial">Weight (lbs):</label>
+                <input type="number" id="weight-imperial" placeholder="Enter your weight">
+                
+                <label for="height-feet">Height (feet):</label>
+                <input type="number" id="height-feet" placeholder="Feet">
+            </div>
+
+            <button onclick="calculateBMI()">Calculate BMI</button>
+        </section>
+
+        <section class="section-content">
+            <h2>Your BMI Result</h2>
+            <p>Your BMI is: <strong id="bmi-value">N/A</strong></p>
+            <p>Category: <strong id="bmi-category">N/A</strong></p>
+            <h3>Health Tips</h3>
+            <p id="bmi-tips">Enter your BMI to receive health tips.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 BMI Calculator. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function calculateBMI() {
+            let weight, height;
+            let unit = document.getElementById("unit").value;
+
+            if (unit === "metric") {
+                weight = parseFloat(document.getElementById("weight-metric").value);
+                height = parseFloat(document.getElementById("height-metric").value) / 100; // Convert cm to meters
+            } else {
+                let weightLbs = parseFloat(document.getElementById("weight-imperial").value);
+                let feet = parseFloat(document.getElementById("height-feet").value);
+                
+                height = feet; // Use only feet for height
+                weight = weightLbs; // Keep weight in lbs
+
+                // Corrected BMI formula for imperial units
+                let bmi = ((weight / (height ** 2)) * 4.88).toFixed(2);
+
+                if (isNaN(weight) || isNaN(height) || height <= 0) {
+                    document.getElementById("bmi-value").textContent = "N/A";
+                    document.getElementById("bmi-category").textContent = "Invalid input";
+                    document.getElementById("bmi-tips").textContent = "Please enter valid values for weight and height.";
+                    return;
+                }
+
+                displayBMIResults(bmi);
+                return;
+            }
+
+            // Metric BMI calculation
+            let bmi = (weight / (height * height)).toFixed(2);
+            displayBMIResults(bmi);
+        }
+
+        function displayBMIResults(bmi) {
+            let category = "";
+            let tips = "";
+
+            if (bmi < 18.5) {
+                category = "Underweight";
+                tips = "Consider eating more nutrient-dense foods and incorporating strength training exercises.";
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                category = "Normal Weight";
+                tips = "Maintain a balanced diet and regular exercise to stay healthy.";
+            } else if (bmi >= 25 && bmi < 29.9) {
+                category = "Overweight";
+                tips = "Incorporate a mix of cardio and strength training exercises and watch your calorie intake.";
+            } else {
+                category = "Obese";
+                tips = "Consult a healthcare provider for a structured weight-loss plan and adopt healthy eating habits.";
+            }
+
+            document.getElementById("bmi-value").textContent = bmi;
+            document.getElementById("bmi-category").textContent = category;
+            document.getElementById("bmi-tips").textContent = tips;
+        }
+
+        function toggleUnits() {
+            let unit = document.getElementById("unit").value;
+            document.getElementById("metric-inputs").style.display = unit === "metric" ? "block" : "none";
+            document.getElementById("imperial-inputs").style.display = unit === "imperial" ? "block" : "none";
+        }
+    </script>
+</body>
+</html>

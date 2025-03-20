@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        function calculateBMI() {
+            // Get the unit system selected by the user
+            const unitSystem = document.querySelector('input[name="unit"]:checked').value;
+            
+            let weight, height;
+
+            // Check the selected unit system and process accordingly
+            if (unitSystem === "metric") {
+                // Metric units: Weight in kg, Height in cm
+                weight = parseFloat(document.getElementById("weight-metric").value);
+                height = parseFloat(document.getElementById("height-metric").value) / 100; // Convert cm to meters
+            } else if (unitSystem === "imperial") {
+                // Imperial units: Weight in pounds, Height in feet
+                weight = parseFloat(document.getElementById("weight-imperial").value) * 0.453592; // Convert pounds to kg
+                height = parseFloat(document.getElementById("height-imperial").value) * 0.3048; // Convert feet to meters
+            }
+
+            if (isNaN(weight) || isNaN(height) || height <= 0 || weight <= 0) {
+                document.getElementById("result").innerHTML = "Please enter valid values.";
+                return;
+            }
+
+            // Calculate BMI
+            let bmi = (weight / (height * height)).toFixed(2);
+            let category = "";
+
+            if (bmi < 18.5) {
+                category = "Underweight";
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                category = "Normal weight";
+            } else if (bmi >= 25 && bmi < 29.9) {
+                category = "Overweight";
+            } else {
+                category = "Obese";
+            }
+
+            // Display the result
+            document.getElementById("result").innerHTML = `Your BMI is ${bmi} (${category})`;
+        }
+
+        // Function to toggle visibility of units based on selection
+        function toggleUnitFields() {
+            const unitSystem = document.querySelector('input[name="unit"]:checked').value;
+            if (unitSystem === "metric") {
+                document.getElementById("metric-fields").style.display = "block";
+                document.getElementById("imperial-fields").style.display = "none";
+            } else if (unitSystem === "imperial") {
+                document.getElementById("imperial-fields").style.display = "block";
+                document.getElementById("metric-fields").style.display = "none";
+            }
+        }
+
+        // Set the default visibility based on the selected unit system
+        window.onload = toggleUnitFields;
+    </script>
+</head>
+<body>
+    <header>
+        <h1>BMI Calculator</h1>
+        <p>Calculate your Body Mass Index</p>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home Page</a></li>
+                <li><a href="course-details.html">BMI Calculator</a></li>
+                <li><a href="resources.html">Results & Recommendations</a></li>
+                <li><a href="blog.html">BMI Information</a></li>
+                <li><a href="health-tips.html">Health & Fitness Tips</a></li>
+                <li><a href="contact.html">Contact or About</a></li>
+                <li><a href="appdownlaod.html">Downlaod Bmi App</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="section-content">
+            <h2>Calculate Your BMI</h2>
+            <p>Enter your weight and height to determine your Body Mass Index (BMI).</p>
+
+            <!-- Unit system selection -->
+            <div>
+                <label>
+                    <input type="radio" name="unit" value="metric" onclick="toggleUnitFields()" checked> Metric (kg, cm)
+                </label>
+                <label>
+                    <input type="radio" name="unit" value="imperial" onclick="toggleUnitFields()"> Imperial (lbs, ft)
+                </label>
+            </div>
+
+            <!-- Metric units form -->
+            <div id="metric-fields">
+                <label for="weight-metric">Weight (kg):</label>
+                <input type="number" id="weight-metric" placeholder="Enter your weight">
+                
+                <label for="height-metric">Height (cm):</label>
+                <input type="number" id="height-metric" placeholder="Enter your height">
+            </div>
+
+            <!-- Imperial units form -->
+            <div id="imperial-fields" style="display:none;">
+                <label for="weight-imperial">Weight (lbs):</label>
+                <input type="number" id="weight-imperial" placeholder="Enter your weight">
+                
+                <label for="height-imperial">Height (ft):</label>
+                <input type="number" id="height-imperial" placeholder="Enter your height">
+            </div>
+
+            <button onclick="calculateBMI()">Calculate BMI</button>
+            
+            <p id="result"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 BMI Calculator. All rights reserved.</p>
+    </footer>
+</body>
+</html>
